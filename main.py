@@ -51,11 +51,13 @@ class grafo:
 
     
     #Implementación de dfs iterativa
-    def dfs(self, keyNodoV): 
+    #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
+    def dfs(self, keyNodoV, limpiarVisitados=True): 
         resultado = []
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
-            self.setearNodosSinVisitar(); #Seteamos todos los nodos como sin visitar
+            if limpiarVisitados:
+                self.setearNodosSinVisitar(); #Seteamos todos los nodos como sin visitar
             stack = []
             stack.append(vInicial)
             while(stack != []):
@@ -69,12 +71,15 @@ class grafo:
         
         return resultado
 
-    #Implementación de dfs iterativa
-    def bfs(self, keyNodoV): 
+    #Implementación de bfs iterativa
+    #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
+    #Tener la opcion de no hacerlo permite reutilizar bfs para hallar componentes conexas
+    def bfs(self, keyNodoV, limpiarVisitados=True): 
         resultado = []
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
-            self.setearNodosSinVisitar(); #Seteamos todos los nodos como sin visitar
+            if limpiarVisitados:
+                self.setearNodosSinVisitar(); #Seteamos todos los nodos como sin visitar
             queue = []
             queue.append(vInicial)
             while(queue != []):
@@ -87,8 +92,23 @@ class grafo:
                         queue.append(vAdy) #insertamos al final
         
         return resultado
-        
 
+    #Utilizamos bfs desde cada nodo, sin limpiar los nodos visitados para hallar una lista de componentes conexas
+    def componentes_conexas(self):
+        resultado=[]
+        self.setearNodosSinVisitar() #limpiamos por unica vez los nodos, colocandolos sin visitar
+        for key in self.grafo:
+            #hacemos el bfs con la opcion de colocar los nodos sin visitar en False desde cada nodo 
+            #y agregamos el cubrimiento resultante (componente conexa) a la lista de listas
+            cubrimiento = self.bfs(key,False) 
+            #Si no es vacio, lo agrego como otra comp conexa
+            if cubrimiento != []:
+                resultado.append(cubrimiento) 
+
+        return resultado
+
+    def cantidad_componentes_conexas(self):
+        return len(self.componentes_conexas())
     
 
 miGrafo = grafo()
@@ -149,6 +169,12 @@ print('Camino bfs 2:')
 print(miGrafo.bfs('2'))
 print('Camino bfs 04:')
 print(miGrafo.bfs('04'))
+
+
+print('Componentes conexas')
+print(miGrafo.componentes_conexas())
+print('Cantidad Componentes conexas')
+print(miGrafo.cantidad_componentes_conexas())
 
 
 
