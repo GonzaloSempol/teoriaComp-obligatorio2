@@ -109,11 +109,13 @@ class grafo:
 
     def cantidad_componentes_conexas(self):
         return len(self.componentes_conexas())
+
+    def es_conexo(self):
+        return self.cantidad_componentes_conexas() == 1
     
 
 miGrafo = grafo()
 nodo0 = nodo({'objetito': 'algo', 'key':'0'})
-print(nodo0)
 nodo1 = nodo({'objetito': 'algo', 'key':'1'})
 nodo2 = nodo({'objetito': 'otra cosa', 'key':'2'})
 nodo3 = nodo({'objetito': 'otra cosa 2', 'key':'3'})
@@ -150,10 +152,6 @@ miGrafo.insertarArista('4','3')
 
 print('GRAFO:')
 print(miGrafo.grafo)
-print('pruebo traer nodo1 by key')
-print((miGrafo.getNodoByKey('1')).getKey())
-print('pruebo traer nodo2 by key')
-print((miGrafo.getNodoByKey('2')).getKey())
 print('ady nodo1:')
 nodo1.printAdyacenciasByKey()
 print('ady nodo2:')
@@ -175,6 +173,8 @@ print('Componentes conexas')
 print(miGrafo.componentes_conexas())
 print('Cantidad Componentes conexas')
 print(miGrafo.cantidad_componentes_conexas())
+print('Es Conexo')
+print(miGrafo.es_conexo())
 
 
 
