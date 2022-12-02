@@ -91,15 +91,15 @@ class grafo:
             queue = []
             queue.append(vInicial)
             while(queue != []):
-                self.render()
                 v=queue.pop(0)
                 if not v.esVisitado() :
                     v.setVisitado()
+                    self.render(v.getKey())
                     resultado.append(v)
                 for vAdy in (v.getAdyacencias()) :
                     if not vAdy.esVisitado() :
                         queue.append(vAdy) #insertamos al final
-        
+                
         return resultado
 
     #Utilizamos bfs desde cada nodo, sin limpiar los nodos visitados para hallar una lista de componentes conexas
@@ -133,9 +133,11 @@ class grafo:
         for key in self.grafo:
             nodo=self.getNodoByKey(key)
             if nodo.esVisitado():
-                nodosVisitados.append(nodo.getKey())
+                if(nodoActual != nodo and nodoActual != []):
+                    nodosVisitados.append(nodo.getKey())
             else:
-                nodosSinVisitar.append(nodo.getKey())
+                if(nodoActual != nodo and nodoActual != []):
+                    nodosSinVisitar.append(nodo.getKey())
  
         
         G.add_nodes_from(self.grafo.keys())    
@@ -146,8 +148,9 @@ class grafo:
                 G.add_edge(nodo.getKey(), ady.getKey())
                      
         pos=nx.spring_layout(G)
-        nx.draw(G, pos, with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=6, node_size=400)
-        nx.draw(G, pos, with_labels=True, node_color='grey', nodelist=nodosSinVisitar, font_size=18, width=6, node_size=400)
+        nx.draw(G, pos, with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=5, node_size=400)
+        nx.draw(G, pos, with_labels=True, node_color='grey', nodelist=nodosSinVisitar, font_size=18, width=5, node_size=400)
+        nx.draw(G, pos, with_labels=True, node_color='Red', nodelist=nodoActual, font_size=18, width=5, node_size=600)
         plt.show()
     
 
