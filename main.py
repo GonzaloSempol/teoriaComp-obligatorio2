@@ -1,3 +1,8 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
 class nodo:
     def __init__(self, nodo): #un nodo puede ser cualquier objeto, pero debe tener un atributo key enumerable
         self.nodo = nodo;
@@ -27,6 +32,7 @@ class nodo:
     def printAdyacenciasByKey(self):     
         adybykey = map(lambda x: (x.getKey()), (self.adyacencias))
         list(map(print,adybykey))
+    
     
 
 class grafo:
@@ -113,6 +119,23 @@ class grafo:
     def es_conexo(self):
         return self.cantidad_componentes_conexas() == 1
     
+    def render(self):
+        #Para que no sea distinto cada vez
+        random.seed(1)
+        np.random.seed(1)
+
+        G=nx.Graph()
+        G.add_nodes_from(self.grafo.keys())
+        aristas = set()
+        for key in self.grafo.keys():
+            nodo=self.getNodoByKey(key)
+            for ady in nodo.getAdyacencias():
+                G.add_edge(nodo.getKey(), ady.getKey())
+        
+        pos=nx.spring_layout(G)
+        nx.draw(G, pos, with_labels=True, node_color="skyblue", font_size=18, width=6, node_size=300)
+
+    
 
 miGrafo = grafo()
 nodo0 = nodo({'objetito': 'algo', 'key':'0'})
@@ -175,7 +198,8 @@ print('Cantidad Componentes conexas')
 print(miGrafo.cantidad_componentes_conexas())
 print('Es Conexo')
 print(miGrafo.es_conexo())
-
+miGrafo.render()
+plt.show()
 
 
 
