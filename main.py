@@ -1,7 +1,9 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import numpy as np
 import random
+
 
 class nodo:
     def __init__(self, nodo): #un nodo puede ser cualquier objeto, pero debe tener un atributo key enumerable
@@ -89,6 +91,7 @@ class grafo:
             queue = []
             queue.append(vInicial)
             while(queue != []):
+                self.render()
                 v=queue.pop(0)
                 if not v.esVisitado() :
                     v.setVisitado()
@@ -119,22 +122,33 @@ class grafo:
     def es_conexo(self):
         return self.cantidad_componentes_conexas() == 1
     
-    def render(self):
+    def render(self, nodoActual=[]):
         #Para que no sea distinto cada vez
         random.seed(1)
         np.random.seed(1)
 
         G=nx.Graph()
-        G.add_nodes_from(self.grafo.keys())
-        aristas = set()
+        nodosVisitados=[]
+        nodosSinVisitar=[]
+        for key in self.grafo:
+            nodo=self.getNodoByKey(key)
+            if nodo.esVisitado():
+                nodosVisitados.append(nodo.getKey())
+            else:
+                nodosSinVisitar.append(nodo.getKey())
+ 
+        
+        G.add_nodes_from(self.grafo.keys())    
+
         for key in self.grafo.keys():
             nodo=self.getNodoByKey(key)
             for ady in nodo.getAdyacencias():
                 G.add_edge(nodo.getKey(), ady.getKey())
-        
+                     
         pos=nx.spring_layout(G)
-        nx.draw(G, pos, with_labels=True, node_color="skyblue", font_size=18, width=6, node_size=300)
-
+        nx.draw(G, pos, with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=6, node_size=400)
+        nx.draw(G, pos, with_labels=True, node_color='grey', nodelist=nodosSinVisitar, font_size=18, width=6, node_size=400)
+        plt.show()
     
 
 miGrafo = grafo()
@@ -198,6 +212,7 @@ print('Cantidad Componentes conexas')
 print(miGrafo.cantidad_componentes_conexas())
 print('Es Conexo')
 print(miGrafo.es_conexo())
+
 miGrafo.render()
 plt.show()
 
