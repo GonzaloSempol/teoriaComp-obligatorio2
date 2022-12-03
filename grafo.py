@@ -132,7 +132,6 @@ class grafo:
 
     def verificar_camino_mas_corto(self, camino):
         if self.esCaminoValido(camino): #verificar que exista ese camino de A->B
-            print('es validou!')
             origen = camino.copy().pop(0)
             destino = camino.copy().pop()
             print('origen ', origen)
