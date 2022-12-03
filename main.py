@@ -1,118 +1,5 @@
-class nodo:
-    def __init__(self, nodo): #un nodo puede ser cualquier objeto, pero debe tener un atributo key enumerable
-        self.nodo = nodo;
-        self.adyacencias = set() #set de nodos, O(1) de insercion y busqueda
-        self.visitado=False #Atributo que se utiliza en algoritmos para controlar si un nodo fue visitado
-    
-    #Redefinimos el print para que muestre la clave al imprimir un nodo
-    def __repr__(self):
-        return self.getKey()     
-
-    def getKey(self): #El objeto debe tener un atributo key
-        return self.nodo.get('key')
-    
-    def setVisitado(self):
-        self.visitado = True #setear visitado
-    def setNoVisitado(self):
-        self.visitado = False #setear no visitado
-    def esVisitado(self):
-        return self.visitado
-
-    def insertarAdyacencia(self, nodoDest):
-        self.adyacencias.add(nodoDest)
-    
-    def getAdyacencias(self):
-        return self.adyacencias
-    
-    def printAdyacenciasByKey(self):     
-        adybykey = map(lambda x: (x.getKey()), (self.adyacencias))
-        list(map(print,adybykey))
-    
-
-class grafo:
-    def __init__(self): 
-        self.grafo = {} #O(1) de insercion y busqueda
-    
-    def insertarNodo(self,nodo):
-        self.grafo[nodo.getKey()] = nodo
-    
-    def getNodoByKey(self, keyNodo):
-        return self.grafo.get(keyNodo)
-    
-    def insertarArista(self, keyNodoOrigen, keyNodoDestino):
-        nodoOrigen = (self.getNodoByKey(keyNodoOrigen))
-        nodoDestino = (self.getNodoByKey(keyNodoDestino))
-        nodoOrigen.insertarAdyacencia(nodoDestino)
-        nodoDestino.insertarAdyacencia(nodoOrigen)
-    
-    def setearNodosSinVisitar(self):
-        for key in self.grafo : #Para todas las keys
-            self.getNodoByKey(key).setNoVisitado() #Obtengo el nodo y lo seteo sin visitar
-
-    
-    #Implementación de dfs iterativa
-    #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
-    def dfs(self, keyNodoV, limpiarVisitados=True): 
-        resultado = []
-        vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
-        if vInicial is not None : #Si existe el nodo inicial
-            if limpiarVisitados:
-                self.setearNodosSinVisitar(); #Seteamos todos los nodos como sin visitar
-            stack = []
-            stack.append(vInicial)
-            while(stack != []):
-                v=stack.pop(0)
-                if not v.esVisitado() :
-                    v.setVisitado()
-                    resultado.append(v)
-                for vAdy in (v.getAdyacencias()) :
-                    if not vAdy.esVisitado() :
-                        stack.insert(0, vAdy) #insertamos al comienzo
-        
-        return resultado
-
-    #Implementación de bfs iterativa
-    #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
-    #Tener la opcion de no hacerlo permite reutilizar bfs para hallar componentes conexas
-    def bfs(self, keyNodoV, limpiarVisitados=True): 
-        resultado = []
-        vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
-        if vInicial is not None : #Si existe el nodo inicial
-            if limpiarVisitados:
-                self.setearNodosSinVisitar(); #Seteamos todos los nodos como sin visitar
-            queue = []
-            queue.append(vInicial)
-            while(queue != []):
-                v=queue.pop(0)
-                if not v.esVisitado() :
-                    v.setVisitado()
-                    resultado.append(v)
-                for vAdy in (v.getAdyacencias()) :
-                    if not vAdy.esVisitado() :
-                        queue.append(vAdy) #insertamos al final
-        
-        return resultado
-
-    #Utilizamos bfs desde cada nodo, sin limpiar los nodos visitados para hallar una lista de componentes conexas
-    def componentes_conexas(self):
-        resultado=[]
-        self.setearNodosSinVisitar() #limpiamos por unica vez los nodos, colocandolos sin visitar
-        for key in self.grafo:
-            #hacemos el bfs con la opcion de colocar los nodos sin visitar en False desde cada nodo 
-            #y agregamos el cubrimiento resultante (componente conexa) a la lista de listas
-            cubrimiento = self.bfs(key,False) 
-            #Si no es vacio, lo agrego como otra comp conexa
-            if cubrimiento != []:
-                resultado.append(cubrimiento) 
-
-        return resultado
-
-    def cantidad_componentes_conexas(self):
-        return len(self.componentes_conexas())
-
-    def es_conexo(self):
-        return self.cantidad_componentes_conexas() == 1
-    
+from grafo import grafo
+from nodo import  nodo
 
 miGrafo = grafo()
 nodo0 = nodo({'objetito': 'algo', 'key':'0'})
@@ -175,6 +62,13 @@ print('Cantidad Componentes conexas')
 print(miGrafo.cantidad_componentes_conexas())
 print('Es Conexo')
 print(miGrafo.es_conexo())
+print('Camino mas corto 0-9')
+print(miGrafo.camino_mas_corto('0','9'))
+print('Largo Camino mas corto 0-9')
+print(miGrafo.largo_camino_mas_corto('0','9'))
+print('[0, 9] es mas corto?')
+print(miGrafo.verificar_camino_mas_corto(['0','7','6','4']))
+
 
 
 
