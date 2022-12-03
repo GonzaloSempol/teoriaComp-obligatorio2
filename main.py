@@ -66,7 +66,7 @@ print('Camino mas corto 0-9')
 print(miGrafo.camino_mas_corto('0','9'))
 print('Largo Camino mas corto 0-9')
 print(miGrafo.largo_camino_mas_corto('0','9'))
-print('[0, 9] es mas corto?')
+print('[0, 4] es mas corto?')
 print(miGrafo.verificar_camino_mas_corto(['0','7','6','4']))
 
 
@@ -74,3 +74,6 @@ print(miGrafo.verificar_camino_mas_corto(['0','7','6','4']))
 
 
 
+
+#Agregar casos de prueba
+#Crear una lista, no se chequea de buena manera que los dos nodos existan
