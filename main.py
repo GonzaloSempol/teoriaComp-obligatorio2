@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 import random
-
+from matplotlib.animation import FuncAnimation
 
 class nodo:
     def __init__(self, nodo): #un nodo puede ser cualquier objeto, pero debe tener un atributo key enumerable
@@ -40,6 +40,7 @@ class nodo:
 class grafo:
     def __init__(self): 
         self.grafo = {} #O(1) de insercion y busqueda
+        self.animacion = []
     
     def insertarNodo(self,nodo):
         self.grafo[nodo.getKey()] = nodo
@@ -60,8 +61,9 @@ class grafo:
     
     #Implementación de dfs iterativa
     #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
-    def dfs(self, keyNodoV, limpiarVisitados=True): 
+    def dfs(self, keyNodoV, limpiarVisitados=True, render=False): 
         resultado = []
+        titulo="DFS (" + keyNodoV + "): " 
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
             if limpiarVisitados:
@@ -82,8 +84,9 @@ class grafo:
     #Implementación de bfs iterativa
     #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
     #Tener la opcion de no hacerlo permite reutilizar bfs para hallar componentes conexas
-    def bfs(self, keyNodoV, limpiarVisitados=True): 
+    def bfs(self, keyNodoV, limpiarVisitados=True, render=False): 
         resultado = []
+        titulo="BFS (" + keyNodoV + "): " 
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
             if limpiarVisitados:
@@ -94,14 +97,17 @@ class grafo:
                 v=queue.pop(0)
                 if not v.esVisitado() :
                     v.setVisitado()
-                    self.render(v.getKey())
+                    if(render):
+                        self.render(v.getKey(), titulo + ','.join(map(str,resultado)))
                     resultado.append(v)
                 for vAdy in (v.getAdyacencias()) :
                     if not vAdy.esVisitado() :
                         queue.append(vAdy) #insertamos al final
-                
-        return resultado
 
+             
+        return resultado
+    
+   
     #Utilizamos bfs desde cada nodo, sin limpiar los nodos visitados para hallar una lista de componentes conexas
     def componentes_conexas(self):
         resultado=[]
@@ -122,7 +128,7 @@ class grafo:
     def es_conexo(self):
         return self.cantidad_componentes_conexas() == 1
     
-    def render(self, nodoActual=[]):
+    def render(self, nodoActual=[], titulo=""):
         #Para que no sea distinto cada vez
         random.seed(1)
         np.random.seed(1)
@@ -139,19 +145,20 @@ class grafo:
                 if(nodoActual != nodo and nodoActual != []):
                     nodosSinVisitar.append(nodo.getKey())
  
-        
         G.add_nodes_from(self.grafo.keys())    
 
         for key in self.grafo.keys():
             nodo=self.getNodoByKey(key)
             for ady in nodo.getAdyacencias():
                 G.add_edge(nodo.getKey(), ady.getKey())
-                     
+           
         pos=nx.spring_layout(G)
-        nx.draw(G, pos, with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=5, node_size=400)
+        plt.title(titulo)
+        nx.draw(G, pos,  with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=5, node_size=400)
         nx.draw(G, pos, with_labels=True, node_color='grey', nodelist=nodosSinVisitar, font_size=18, width=5, node_size=400)
-        nx.draw(G, pos, with_labels=True, node_color='Red', nodelist=nodoActual, font_size=18, width=5, node_size=600)
-        plt.show()
+        nx.draw(G, pos, with_labels=True, node_color='lightgreen', nodelist=nodoActual, font_size=18, width=5, node_size=400)
+        plt.pause(0.5)
+        
     
 
 miGrafo = grafo()
@@ -190,33 +197,34 @@ miGrafo.insertarArista('5','4')
 miGrafo.insertarArista('9','4')
 miGrafo.insertarArista('4','3')
 
-print('GRAFO:')
-print(miGrafo.grafo)
-print('ady nodo1:')
-nodo1.printAdyacenciasByKey()
-print('ady nodo2:')
-nodo2.printAdyacenciasByKey()
-print('ady nodo3:')
-nodo3.printAdyacenciasByKey()
+# print('GRAFO:')
+# print(miGrafo.grafo)
+# print('ady nodo1:')
+# nodo1.printAdyacenciasByKey()
+# print('ady nodo2:')
+# nodo2.printAdyacenciasByKey()
+# print('ady nodo3:')
+# nodo3.printAdyacenciasByKey()
 
-print('Camino dfs 2:')
-print(miGrafo.dfs('2'))
-print('Camino dfs 04:')
-print(miGrafo.dfs('04'))
-print('Camino bfs 2:')
-print(miGrafo.bfs('2'))
-print('Camino bfs 04:')
-print(miGrafo.bfs('04'))
+# print('Camino dfs 2:')
+# print(miGrafo.dfs('2'))
+# print('Camino dfs 04:')
+# print(miGrafo.dfs('04'))
+# print('Camino bfs 2:')
+print(miGrafo.bfs('2', True, True))
+# print('Camino bfs 04:')
+print(miGrafo.bfs('4'))
 
 
-print('Componentes conexas')
-print(miGrafo.componentes_conexas())
-print('Cantidad Componentes conexas')
-print(miGrafo.cantidad_componentes_conexas())
-print('Es Conexo')
-print(miGrafo.es_conexo())
+# print('Componentes conexas')
+# print(miGrafo.componentes_conexas())
+# print('Cantidad Componentes conexas')
+# print(miGrafo.cantidad_componentes_conexas())
+# print('Es Conexo')
+# print(miGrafo.es_conexo())
+#miGrafo.crearFrame()
 
-miGrafo.render()
+#miGrafo.render()
 plt.show()
 
 
