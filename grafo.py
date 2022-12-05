@@ -29,7 +29,7 @@ class grafo:
     
     #Implementación de dfs iterativa
     #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
-    def dfs(self, keyNodoV, limpiarVisitados=True): 
+    def dfs(self, keyNodoV, render=False, limpiarVisitados=True): 
         resultado = []
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
@@ -41,11 +41,14 @@ class grafo:
                 v=stack.pop(0)
                 if not v.esVisitado() :
                     v.setVisitado()
+                    if(render):
+                        self.render("DFS (" + keyNodoV + "): "  + ','.join(map(str,resultado)),0.7, v.getKey())
                     resultado.append(v)
                 for vAdy in (v.getAdyacencias()) :
                     if not vAdy.esVisitado() :
                         stack.insert(0, vAdy) #insertamos al comienzo
-        
+        if(render):
+            self.render("DFS (" + keyNodoV + "): "  + ','.join(map(str,resultado)) + " Completo",2, v.getKey())
         return resultado
 
     #Implementación de bfs iterativa
@@ -53,7 +56,6 @@ class grafo:
     #Tener la opcion de no hacerlo permite reutilizar bfs para hallar componentes conexas
     def bfs(self, keyNodoV, render=False, limpiarVisitados=True): 
         resultado = []
-        titulo="BFS (" + keyNodoV + "): " 
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
             if limpiarVisitados:
@@ -65,13 +67,14 @@ class grafo:
                 if not v.esVisitado() :
                     v.setVisitado()
                     if(render):
-                        self.render(titulo + ','.join(map(str,resultado)),0.7, v.getKey())
+                        self.render("BFS (" + keyNodoV + "): "  + ','.join(map(str,resultado)),0.7, v.getKey())
                     resultado.append(v)
                 for vAdy in (v.getAdyacencias()) :
                     if not vAdy.esVisitado() :
                         queue.append(vAdy) #insertamos al final
 
-             
+        if(render):
+            self.render("BFS (" + keyNodoV + "): "  + ','.join(map(str,resultado)) + " Completo",2, v.getKey())     
         return resultado
     
 
@@ -146,17 +149,15 @@ class grafo:
         if self.esCaminoValido(camino): #verificar que exista ese camino de A->B
             origen = camino.copy().pop(0)
             destino = camino.copy().pop()
-            print('origen ', origen)
-            print('destino', destino) 
-            print('largo camino', len(camino) -1) 
             return (len(camino) -1) == self.largo_camino_mas_corto(origen, destino) #Retornamos True si su largo es optimo
         else:
             return False
 
     def render(self, titulo="",tiempo=0, nodoActual=[]):
         #Para que no sea distinto cada vez
-        random.seed(1)
-        np.random.seed(1)
+        random.seed(10)
+        np.random.seed(10)
+        plt.clf()
 
         G=nx.Graph()
         nodosVisitados=[]
