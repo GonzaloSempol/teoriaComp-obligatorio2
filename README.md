@@ -14,8 +14,16 @@ Los nodos deben ser objetos de la forma:
       'atribN':'valorN'
      }
 
- **Requerimientos:**
- - python3.6+✅
+**Requerimientos:**
 
- **Para correr el codigo:** 
- - `py main.py`
+- python3.6+✅
+
+- Instalar dependencias en un venv:
+
+- `python -m venv venv && venv/scripts/activate && pip install -r requirements.txt`
+
+  
+
+**Para correr el codigo:**
+- Activar el venv: `venv/scripts/activate`
+- Desde dentro del venv: `py main.py`
