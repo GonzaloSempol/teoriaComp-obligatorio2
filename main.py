@@ -4,9 +4,13 @@ from nodo import  nodo
 
 
 
+#Casos de prueba
 
 
-#Grafo G1
+###############################
+#Grafo G1######################
+###############################
+
 G1 = grafo()
 #Nodos
 G1nodo0 = nodo({'objeto': 'algo', 'key':'0'})
@@ -46,7 +50,6 @@ G1.insertarArista('4','3')
 
 #Casos de prueba grafo G1
 print('GRAFO G1:')
-print(G1.grafo)
 G1.render("Grafo G1, cierre la ventana para continuar")
 
 print('G1: DFS desde nodo  2:')
@@ -71,7 +74,11 @@ print('G1: Camino [0,7,6,4] es mas corto?')
 print(G1.verificar_camino_mas_corto(['0','7','6','4']))
 
 
-#Grafo G2
+
+###############################
+#Grafo G2######################
+###############################
+
 G2 = grafo()
 #Nodos
 G2nodo0 = nodo({'otro objeto': 'algo', 'key':'0'})
@@ -105,6 +112,7 @@ G2.insertarArista('5','3')
 G2.insertarArista('5','7')
 G2.insertarArista('8','9')
 
+print('GRAFO G2:')
 G2.render("Grafo G2, cierre la ventana para continuar")
 print("G2: BFS desde nodo 3:")
 print(G2.bfs('0', True))
@@ -119,8 +127,10 @@ print(G2.es_conexo())
 print("G2: Largo camino mas corto 9-1:")
 print(G2.largo_camino_mas_corto('9','1'))
 
+###############################
+#Grafo G3######################
+###############################
 
-#Grafo G3
 G3 = grafo()
 #Nodos
 G3nodo0 = nodo({'otro objeto': 'algo', 'key':'0'})
@@ -159,6 +169,7 @@ G3.insertarArista('8','6')
 G3.insertarArista('3','9')
 G3.insertarArista('6','9')
 
+print('GRAFO G3:')
 G3.render("Grafo G3, cierre la ventana para continuar")
 print("G3: BFS desde nodo 0:")
 print(G3.bfs('0', True))
@@ -179,8 +190,3 @@ print(G3.verificar_camino_mas_corto(['4','5','0','3']))
 print("G3: Verificar camino mas corto ['4','1','6','9','3']:")
 print(G3.verificar_camino_mas_corto(['4','1','6','9','3']))
 
-
-
-
-#Agregar casos de prueba
-#Crear una lista, no se chequea de buena manera que los dos nodos existan

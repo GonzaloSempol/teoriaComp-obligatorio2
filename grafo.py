@@ -11,7 +11,9 @@ class grafo:
         self.grafo = {} #O(1) de insercion y busqueda
     
     def insertarNodo(self,nodo):
-        self.grafo[nodo.getKey()] = nodo
+        keyNodo=nodo.getKey()
+        if keyNodo is not None:
+            self.grafo[keyNodo] = nodo
     
     def getNodoByKey(self, keyNodo):
         return self.grafo.get(keyNodo)
@@ -19,8 +21,9 @@ class grafo:
     def insertarArista(self, keyNodoOrigen, keyNodoDestino):
         nodoOrigen = (self.getNodoByKey(keyNodoOrigen))
         nodoDestino = (self.getNodoByKey(keyNodoDestino))
-        nodoOrigen.insertarAdyacencia(nodoDestino)
-        nodoDestino.insertarAdyacencia(nodoOrigen)
+        if(nodoOrigen is not None and nodoDestino is not None):
+            nodoOrigen.insertarAdyacencia(nodoDestino)
+            nodoDestino.insertarAdyacencia(nodoOrigen)
     
     def setearNodosSinVisitar(self):
         for key in self.grafo : #Para todas las keys
@@ -183,6 +186,7 @@ class grafo:
         nx.draw(G, pos,  with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=5, node_size=400)
         nx.draw(G, pos, with_labels=True, node_color='grey', nodelist=nodosSinVisitar, font_size=18, width=5, node_size=400)
         nx.draw(G, pos, with_labels=True, node_color='lightgreen', nodelist=nodoActual, font_size=18, width=5, node_size=400)
+        
         if(tiempo > 0):
             plt.pause(tiempo)
         else:
