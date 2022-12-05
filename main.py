@@ -1,6 +1,8 @@
 from grafo import grafo
 from nodo import  nodo
 
+
+
 miGrafo = grafo()
 nodo0 = nodo({'objetito': 'algo', 'key':'0'})
 nodo1 = nodo({'objetito': 'algo', 'key':'1'})
@@ -51,7 +53,10 @@ print(miGrafo.dfs('2'))
 print('Camino dfs 04:')
 print(miGrafo.dfs('04'))
 print('Camino bfs 2:')
-print(miGrafo.bfs('2'))
+print(miGrafo.bfs('2', True))
+
+miGrafo.render("Titulo del Render")
+
 print('Camino bfs 04:')
 print(miGrafo.bfs('04'))
 

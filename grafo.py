@@ -1,4 +1,11 @@
 import nodo
+#Para Render
+import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+
 class grafo:
     def __init__(self): 
         self.grafo = {} #O(1) de insercion y busqueda
@@ -44,8 +51,9 @@ class grafo:
     #Implementación de bfs iterativa
     #limpiarVisitados indica si se debe recorrer la estructura del grafo para dejarlo como sin visitar
     #Tener la opcion de no hacerlo permite reutilizar bfs para hallar componentes conexas
-    def bfs(self, keyNodoV, limpiarVisitados=True): 
+    def bfs(self, keyNodoV, render=False, limpiarVisitados=True): 
         resultado = []
+        titulo="BFS (" + keyNodoV + "): " 
         vInicial=self.getNodoByKey(keyNodoV); #Buscamos el nodo inicial       
         if vInicial is not None : #Si existe el nodo inicial
             if limpiarVisitados:
@@ -56,12 +64,16 @@ class grafo:
                 v=queue.pop(0)
                 if not v.esVisitado() :
                     v.setVisitado()
+                    if(render):
+                        self.render(titulo + ','.join(map(str,resultado)),0.7, v.getKey())
                     resultado.append(v)
                 for vAdy in (v.getAdyacencias()) :
                     if not vAdy.esVisitado() :
                         queue.append(vAdy) #insertamos al final
-        
+
+             
         return resultado
+    
 
     #Utilizamos bfs desde cada nodo, sin limpiar los nodos visitados para hallar una lista de componentes conexas
     def componentes_conexas(self):
@@ -70,7 +82,7 @@ class grafo:
         for key in self.grafo:
             #hacemos el bfs con la opcion de colocar los nodos sin visitar en False desde cada nodo 
             #y agregamos el cubrimiento resultante (componente conexa) a la lista de listas
-            cubrimiento = self.bfs(key,False) 
+            cubrimiento = self.bfs(key,False, False) 
             #Si no es vacio, lo agrego como otra comp conexa
             if cubrimiento != []:
                 resultado.append(cubrimiento) 
@@ -140,3 +152,39 @@ class grafo:
             return (len(camino) -1) == self.largo_camino_mas_corto(origen, destino) #Retornamos True si su largo es optimo
         else:
             return False
+
+    def render(self, titulo="",tiempo=0, nodoActual=[]):
+        #Para que no sea distinto cada vez
+        random.seed(1)
+        np.random.seed(1)
+
+        G=nx.Graph()
+        nodosVisitados=[]
+        nodosSinVisitar=[]
+        for key in self.grafo:
+            nodo=self.getNodoByKey(key)
+            if nodo.esVisitado():
+                if(nodoActual != nodo and nodoActual != []):
+                    nodosVisitados.append(nodo.getKey())
+            else:
+                if(nodoActual != nodo and nodoActual != []):
+                    nodosSinVisitar.append(nodo.getKey())
+ 
+        G.add_nodes_from(self.grafo.keys())    
+
+        for key in self.grafo.keys():
+            nodo=self.getNodoByKey(key)
+            for ady in nodo.getAdyacencias():
+                G.add_edge(nodo.getKey(), ady.getKey())
+           
+        pos=nx.spring_layout(G)
+        plt.title(titulo)
+        nx.draw(G, pos,  with_labels=True, node_color='skyblue', nodelist=nodosVisitados, font_size=18, width=5, node_size=400)
+        nx.draw(G, pos, with_labels=True, node_color='grey', nodelist=nodosSinVisitar, font_size=18, width=5, node_size=400)
+        nx.draw(G, pos, with_labels=True, node_color='lightgreen', nodelist=nodoActual, font_size=18, width=5, node_size=400)
+        if(tiempo > 0):
+            plt.pause(tiempo)
+        else:
+            nx.draw(G, pos, with_labels=True, node_color='grey', font_size=18, width=5, node_size=400)
+            plt.show()
+        
