@@ -37,7 +37,7 @@ Los nodos deben ser objetos de la forma:
 	  
 
 		 - `python -m venv venv`
-		 - `venv/scripts/activate`
+		 - `venv/scripts/activate` (WINDOWS) or `source env/bin/activate` (MAC)
 		 - `pip install -r requirements.txt`
 
 
@@ -46,7 +46,7 @@ Los nodos deben ser objetos de la forma:
 - Asegurarnos que estamos en el venv:
 	- Si no lo estamos activarlo: `venv/scripts/activate`
 
-- Desde dentro del venv: `py main.py` 
+- Desde dentro del venv: `py main.py` o `python3 main.py`
 
 
 
